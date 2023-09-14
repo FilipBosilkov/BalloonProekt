@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-config
+  namespace: devops
+data:
+  POSTGRES_URL: "postgresql://postgres:postgres@database:5432/postgres"
+  POSTGRES_DATABASE: "postgres"
+  POSTGRES_USER: "postgres"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: project-secret
+  namespace: devops
+type: Opaque
+data:
+  password: cG9zdGdyZXM=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-deployment
+  namespace: devops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kiii-project
+  template:
+    metadata:
+      labels:
+        app: kiii-project
+    spec:
+      containers:
+        - name: kiii-project
+          image: fbosilkov/kiii-project:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: project-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: project-secret
+                  key: password

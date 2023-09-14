@@ -1,0 +1,59 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Balloons</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            width: 800px;
+            margin: auto;
+        }
+        table {
+            width:100%;
+        }
+        table, td, th {
+            border: 1px solid black;
+            padding:3px 2px;
+        }
+        section {
+            float: left;
+            width: 63%;
+            margin-top: 30px;
+        }
+        aside {
+            float: right;
+            width: 30%;
+            margin-top: 30px;
+        }
+        .btn{
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<section>
+    <h2>My Balloons:</h2>
+    <ul>
+        <li class="balloons" th:each="bln:${balloons}">
+            <b>Name: </b><th:block th:text="${bln.name}"></th:block><br>
+            <b>Description: </b>
+            <th:block th:text="${bln.description}"></th:block>
+            <form th:action="@{'/balloons/delete/{id}' (id=${bln.getId()})}"
+                  th:method="DELETE" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button type="submit" class="btn btn-danger"><i>Delete</i></button>
+                <a th:href="@{'/balloons/edit-form/{id}'
+            (id=${bln.getId()})}" class="btn btn-primary ediT">
+                    <i>Edit</i></a>
+            </form>
+        </li>
+    </ul>
+</section>
+<aside>
+    <a href="/balloons/add-form" class="btn btn-info" sec:authorize="hasRole('ROLE_ADMIN')">Add a balloon</a>
+    <a href="/balloons/add-manufacturer-form" class="btn btn-info" sec:authorize="hasRole('ROLE_ADMIN')">Add a manufacturer</a>
+    <br><br>
+    <a href="/logout" class="btn btn-dark" sec:authorize="isAuthenticated()">Log out</a>
+    <a href="/logout" class="btn btn-dark" sec:authorize="!isAuthenticated()">Log in</a>
+</aside>
+</body>
+</html>
