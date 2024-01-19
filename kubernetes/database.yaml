@@ -14,7 +14,7 @@ metadata:
   namespace: devops
 type: Opaque
 data:
-  password: cG9zdGdyZXM=
+  password: a2lhYXZlbGEh
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
